@@ -1,0 +1,7 @@
+fastapi==0.109.0
+uvicorn==0.26.0
+discord.py==2.3.2
+asyncio==3.4.3
+python-multipart==0.0.6
+SQLAlchemy==2.0.25
+psycopg2-binary==2.9.9
