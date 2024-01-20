@@ -170,3 +170,8 @@ async def get_file(folder_id: int, user: User = Depends(get_current_user)):
     for file in files:
         file_name.append(file.name)
     return {"files" : file_name}
+
+@app.get("/api/root_folder", summary="Get Folder ID of the root folder")
+async def get_root_id(user: User = Depends(get_current_user)):
+    root_folder_id = session.query(Folder).filter_by(and_(Folder.parent_folder_id == None , Folder.user_id == user.username)).first().id
+    return {"id" : root_folder_id}
