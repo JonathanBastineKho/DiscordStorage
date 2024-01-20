@@ -51,7 +51,6 @@ function FileBox(props) {
         <span className="max-w-sm overflow-hidden bg-white rounded-lg shadow-md">
           <div className="flex justify-between rounded-lg bg-gray-100 p-3 px-4 py-2 hover:bg-gray-200">
             <div className="flex items-center">
-              {/* <FaFilePdf className="mr-2 text-red-900" /> */}
               {returnFileIcon(props.fileName)}
               <p>{props.fileName}</p>
             </div>

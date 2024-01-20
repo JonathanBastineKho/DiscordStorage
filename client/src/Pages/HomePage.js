@@ -8,6 +8,7 @@ import UploadButton from "../Components/UploadButton";
 import UploadFileModal from "../Components/UploadFileModal";
 import { AuthContext } from "../Components/Authentication/AuthContext";
 import jwtDecode from "jwt-decode";
+import FolderBox from "../Components/FolderBox";
 
 
 function HomePage() {
@@ -67,6 +68,7 @@ function HomePage() {
       <MyNavbar />
       <div className="mt-12 mx-auto px-6 sm:px-8 md:px-10 lg:px-12 xl:max-w-[100rem]">
         <PathBreadCrumb />
+        <FolderBox />
 
         <FileTable />
         <UploadButton uploadShow={uploadShow} setUploadShow={setUploadShow}/>
