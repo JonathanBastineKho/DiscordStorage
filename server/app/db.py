@@ -38,11 +38,11 @@ class File(Base):
 
 class FileChunk(Base):
     __tablename__ = "filechunk"
-    chunk_id = Column(Integer, primary_key=True)
-    channel_id = Column(Integer)
+    chunk_id = Column(String, primary_key=True)
+    channel_id = Column(String)
 
-    file_name = Column(String, primary_key=True)
-    folder_id = Column(Integer, primary_key=True)
+    file_name = Column(String)
+    folder_id = Column(Integer)
 
     file = relationship("File", back_populates="chunks")
 
