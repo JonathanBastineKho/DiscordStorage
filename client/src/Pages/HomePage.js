@@ -19,9 +19,9 @@ function HomePage() {
   const [listPath, setListPath] = useState([]);
 
   useEffect(() => {
-    axios.get("https://localhost:8000/api/root_folder").then((res) => {
-      setListPath(listPath.push(res.data))
-    })
+    // axios.get("https://localhost:8000/api/root_folder").then((res) => {
+    //   setListPath(listPath.push(res.data))
+    // })
   }, [])
   // const user = jwtDecode(token); 
 

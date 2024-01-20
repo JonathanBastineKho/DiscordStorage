@@ -4,7 +4,7 @@ import FileBox from "./FileBox";
 function FileTable(props) {
     props = {
         folderId: "folder1",
-        fileNames: ["file1", "file2", "file3", "file4", "file5", "file6"],
+        fileNames: ["file1.pdf", "file2.jpg", "file3.pptx", "file4.xlsx", "file5.mkv", "file6.mp3", "file7.doc", "file8.o"],
         subFolderNames: [{folderId: "folder1", folderName: "my coolest folder"}, {folderId: "folder2", folderName: "my coolest folder2"}]
     }
     const [currentFolder, setCurrentFolder] = useState("")
