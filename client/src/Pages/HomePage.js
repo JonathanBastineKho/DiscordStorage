@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import FileBox from "../Components/FileBox";
 import PathBreadCrumb from "../Components/PathBreadCrumb";
@@ -6,12 +6,24 @@ import MyNavbar from "../Components/MyNavbar";
 import FileTable from "../Components/FileTable";
 import UploadButton from "../Components/UploadButton";
 import UploadFileModal from "../Components/UploadFileModal";
+import { AuthContext } from "../Components/Authentication/AuthContext";
+import jwtDecode from "jwt-decode";
+
 
 function HomePage() {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [filter, setFilter] = useState("");
   const [uploadShow, setUploadShow] = useState(false);
+  const {token, logout} = useContext(AuthContext);
+  const [listPath, setListPath] = useState([]);
+
+  useEffect(() => {
+    axios.get("https://localhost:8000/api/root_folder").then((res) => {
+      setListPath(listPath.push(res.data))
+    })
+  }, [])
+  // const user = jwtDecode(token); 
 
   const handleChange = (e) => {
     setFile(e.target.files[0]);
@@ -35,7 +47,7 @@ function HomePage() {
       formData.append("userId", userId); // append the user id
       formData.append("fileName", fileName); // append the file name
       // send the form data to the FastAPI server
-      const response = axios.post("http://localhost:8000/upload", formData, {
+      const response = axios.post("http://localhost:8000/api/upload", formData, {
         // update the progress state
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
