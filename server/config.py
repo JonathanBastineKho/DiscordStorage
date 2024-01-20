@@ -8,4 +8,5 @@ class Config:
     DATABASE_URL = os.environ.get('DATABASE_URL')
     ACCESS_TOKEN_EXPIRE_MINUTES = 2880
     ALGORITHM = "HS256"
+    TEMP_FOLDER = "temp"
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'default_secret_key'
