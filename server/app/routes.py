@@ -6,6 +6,11 @@ from app.utils import get_hashed_password, verify_password, create_access_token
 from .db import User, FileChunk, File, Folder
 from .deps import get_current_user
 from sqlalchemy import and_
+import requests
+from config import Config
+import os
+from fastapi.responses import FileResponse
+from starlette.background import BackgroundTask
 
 from .schemas import UserData
 
@@ -13,7 +18,7 @@ from .schemas import UserData
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/upload")
+@app.post("/api/upload")
 async def upload_file(
     file: UploadFile = Form(...), 
     chunkId: int = Form(...), 
@@ -54,7 +59,7 @@ async def upload_file(
 
 ######## User login and Sign up ############
 
-@app.post('/register', summary="Create new user")
+@app.post('/api/register', summary="Create new user")
 async def create_user(data : UserData):
     user = session.query(User).filter(User.username == data.username).first()
     if user is not None:
@@ -81,7 +86,7 @@ async def create_user(data : UserData):
     session.commit()
     return {"success" : True}
 
-@app.post('/login', summary="Create access token")
+@app.post('/api/login', summary="Create access token")
 async def login(data: UserData):
      user = session.query(User).filter(User.username == data.username).first()
      if user is None:
@@ -100,9 +105,15 @@ async def login(data: UserData):
           "access_token" : create_access_token(user.username),
           "success" : True 
      }
+
+@app.get('/api/verify_token', summary="Verify Token")
+async def verify_token(user: User = Depends(get_current_user)):
+    if user:
+        return {"success" : True}
+
 ######## Create and Edit ############
 
-@app.post('/create_folder', summary="Create access token")
+@app.post('/api/create_folder', summary="Create access token")
 def create_folder(parent_folder_id: int, name: str):
     new_id = session.query(Folder).order_by(Folder.id.desc()).first().id + 1
     new_folder = Folder(
@@ -117,20 +128,27 @@ def create_folder(parent_folder_id: int, name: str):
 
 ######## get structures ############
 
-@app.get("/cdn_links", summary="Get Links for all the file chunks for a specific file")
-async def get_file(name: str, folder_id: int):
+@app.get('/api/download')
+async def download_file(name: str, folder_id: int):
     file_chunks = session.query(FileChunk).filter(and_(FileChunk.file_name == name, FileChunk.folder_id == folder_id)).all()
     urls = []
-    print(file_chunks) 
     for chunk in file_chunks:
-         channel = client.get_channel(int(chunk.channel_id))
-         msg = await channel.fetch_message(chunk.message_id)
-         urls.append(msg.attachments[0].url)
-    return {
-         "urls" : urls
-    }
+        channel = client.get_channel(int(chunk.channel_id))
+        msg = await channel.fetch_message(chunk.message_id)
+        urls.append(msg.attachments[0].url)
+    
+    # Download file into the disk
+    for url in urls:
+        response = requests.get(url)
+        with open(os.path.join(Config.TEMP_FOLDER, name), 'ab') as f:
+            f.write(response.content)
 
-@app.get("/sub_folders", summary="Get Subfolders within a folder")
+    # Upload file to client
+    return FileResponse(path=os.path.join(Config.TEMP_FOLDER, name), 
+                        filename=name,
+                        background=BackgroundTask(os.remove, os.path.join(Config.TEMP_FOLDER, name)))
+
+@app.get("/api/sub_folders", summary="Get Subfolders within a folder")
 async def get_subfolder(folder_id: int):
      folders = session.query(Folder).filter(Folder.parent_folder_id == folder_id).all()
      folders_list = []
