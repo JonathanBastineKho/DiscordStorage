@@ -20,9 +20,13 @@ function HomePage() {
   const [listPath, setListPath] = useState([]);
 
   useEffect(() => {
-    // axios.get("https://localhost:8000/api/root_folder").then((res) => {
-    //   setListPath(listPath.push(res.data))
-    // })
+    axios.get("/api/root_folder", {
+      headers : {
+        "Authorization" : `${token}`
+      }
+    }).then((res) => {
+      setListPath([res.data]);
+    })
   }, [])
   // const user = jwtDecode(token); 
 
@@ -67,10 +71,10 @@ function HomePage() {
       
       <MyNavbar />
       <div className="mt-12 mx-auto px-6 sm:px-8 md:px-10 lg:px-12 xl:max-w-[100rem]">
-        <PathBreadCrumb />
+        <PathBreadCrumb listPath={listPath} />
 
         <FileTable />
-        <UploadButton uploadShow={uploadShow} setUploadShow={setUploadShow}/>
+        <UploadButton uploadShow={uploadShow} setUploadShow={setUploadShow} listPath={listPath}/>
         
       </div>
     </div>
