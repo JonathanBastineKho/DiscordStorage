@@ -4,7 +4,7 @@ import { AuthContext } from "./AuthContext";
 import axios from "axios";
 import { Spinner } from "flowbite-react";
 
-const PrivateRoute = ({ children }) => {
+const UnAuthenticatedRoute = ({children}) => {
     const { token, logout } = useContext(AuthContext);
 
     const [auth, setAuth] = useState(false);
@@ -17,13 +17,13 @@ const PrivateRoute = ({ children }) => {
                     headers: { Authorization: `${token}` },
                 })
                 .then((res) => {
+                    console.log(res.data.success);
                     if (res.data.success) {
                         setAuth(true);
-                    } else {
-                      logout();
                     }
                 })
                 .catch((error) => {
+                    console.log(error);
                     logout();
                 })
                 .then(() => setIsTokenValidated(true));
@@ -39,12 +39,11 @@ const PrivateRoute = ({ children }) => {
             </div>
         );
     }
-    // return auth ? children : <Navigate to="/login" />;
     if (auth){
-        return children
+        return (<Navigate to="/" />);
     } else {
-        return <Navigate to="/login" />
+        return children;
     }
-};
+}
 
-export default PrivateRoute;
+export default UnAuthenticatedRoute;
