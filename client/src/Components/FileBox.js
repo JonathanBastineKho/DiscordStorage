@@ -8,12 +8,6 @@ import axios from "axios";
 // props needed:
 //  file name, file type, token, file id,
 function FileBox(props) {
-  props = {
-    fileName: "memes.jpg",
-    fileType: "jpg",
-    token: "abcUser",
-    fileId: "f001",
-  };
 
 //   const downloadFile = () => {
 //     console.log("download file")
@@ -60,18 +54,16 @@ function FileBox(props) {
   const deleteFile = (token, fileName) => {
     // delete file
   };
-
-  const [fileName, setFileName] = useState(props.fileName);
   const [renameShow, setRenameShow] = useState(false);
 
   return (
     <div>
-      <RenameModal
+      {/* <RenameModal
         renameShow={renameShow}
         setRenameShow={() => setRenameShow(false)}
         fileName={fileName}
-      />
-      <a className="max-w-sm overflow-hidden bg-white border border-gray-200 rounded-lg shadow-md">
+      /> */}
+      <span className="max-w-sm overflow-hidden bg-white rounded-lg shadow-md">
         <div className="flex justify-between rounded-lg bg-gray-100 p-3 px-4 py-2 hover:bg-gray-200">
           <div className="flex items-center">
             <FaFilePdf className="mr-2 text-red-900" />
@@ -95,7 +87,7 @@ function FileBox(props) {
             </Dropdown.Item>
           </Dropdown>
         </div>
-      </a>
+      </span>
     </div>
   );
 }
