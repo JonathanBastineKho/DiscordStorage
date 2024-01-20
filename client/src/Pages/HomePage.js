@@ -73,7 +73,7 @@ function HomePage() {
         <PathBreadCrumb listPath={listPath} />
 
         <FileTable />
-        <UploadButton uploadShow={uploadShow} setUploadShow={setUploadShow}/>
+        <UploadButton uploadShow={uploadShow} setUploadShow={setUploadShow} listPath={listPath}/>
         
       </div>
     </div>
