@@ -14,7 +14,7 @@ class Folder(Base):
     id = Column(Integer, primary_key=True)
     parent_folder_id = Column(Integer, ForeignKey("folder.id"), nullable=True)
     name = Column(String, nullable=False)
-    user_id = Column(String, ForeignKey("user.username"), nullable=True)
+    user_id = Column(String, ForeignKey("user.username"))
 
     parent_folder = relationship("Folder", remote_side=[id], back_populates="subfolders")
     subfolders = relationship("Folder", back_populates="parent_folder", cascade="all, delete-orphan")

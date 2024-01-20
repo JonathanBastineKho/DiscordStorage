@@ -84,7 +84,10 @@ async def create_user(data : UserData):
     )
     session.add(new_folder)
     session.commit()
-    return {"success" : True}
+    return {
+          "access_token" : create_access_token(new_user.username),
+          "success" : True 
+     }
 
 @app.post('/api/login', summary="Create access token")
 async def login(data: UserData):
@@ -114,12 +117,13 @@ async def verify_token(user: User = Depends(get_current_user)):
 ######## Create and Edit ############
 
 @app.post('/api/create_folder', summary="Create access token")
-def create_folder(parent_folder_id: int, name: str):
+def create_folder(parent_folder_id: int, name: str, user: User = Depends(get_current_user)):
     new_id = session.query(Folder).order_by(Folder.id.desc()).first().id + 1
     new_folder = Folder(
         id = new_id,
         parent_folder_id = parent_folder_id,
-        name = name
+        name = name,
+        user_id = user.username
     )
     session.add(new_folder)
     session.commit()
@@ -129,7 +133,7 @@ def create_folder(parent_folder_id: int, name: str):
 ######## get structures ############
 
 @app.get('/api/download')
-async def download_file(name: str, folder_id: int):
+async def download_file(name: str, folder_id: int, user: User = Depends(get_current_user)):
     file_chunks = session.query(FileChunk).filter(and_(FileChunk.file_name == name, FileChunk.folder_id == folder_id)).all()
     urls = []
     for chunk in file_chunks:
@@ -149,7 +153,7 @@ async def download_file(name: str, folder_id: int):
                         background=BackgroundTask(os.remove, os.path.join(Config.TEMP_FOLDER, name)))
 
 @app.get("/api/sub_folders", summary="Get Subfolders within a folder")
-async def get_subfolder(folder_id: int):
+async def get_subfolder(folder_id: int, user: User = Depends(get_current_user)):
      folders = session.query(Folder).filter(Folder.parent_folder_id == folder_id).all()
      folders_list = []
      for sub_folder in folders:
@@ -158,3 +162,11 @@ async def get_subfolder(folder_id: int):
               "name" : sub_folder.name}
         )
         return {"sub_folder" : folders_list}
+     
+@app.get("/api/get_files", summary="Get files name within a folder")
+async def get_file(folder_id: int, user: User = Depends(get_current_user)):
+    files = session.query(File).filter_by(File.folder_id == folder_id).all()
+    file_name = []
+    for file in files:
+        file_name.append(file.name)
+    return {"files" : file_name}
