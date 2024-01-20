@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
+import MyButton from "../Components/MyButton";
+import FileBox from "../Components/FileBox";
+import PathBreadCrumb from "../Components/PathBreadCrumb";
+import MyNavbar from "../Components/MyNavbar";
 
 function HomePage() {
     const [file, setFile] = useState(null);
     const [progress, setProgress] = useState(0);
-  
+    const [filter, setFilter] = useState("");
+
     const handleChange = (e) => {
       setFile(e.target.files[0]);
     };
@@ -47,11 +52,15 @@ function HomePage() {
   
     return (
       <div>
+        <MyNavbar />
+        <PathBreadCrumb />
         <form onSubmit={handleSubmit}>
           <input type="file" onChange={handleChange} />
           <button type="submit">Upload</button>
         </form>
         <p>Progress: {progress}%</p>
+        <FileBox />
+        
       </div>
     );
   }
