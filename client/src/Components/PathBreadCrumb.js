@@ -8,8 +8,8 @@ function PathBreadCrumb(props) {
     { folderId: 3, folderName: "cccccc" },
   ];
   return (
-    <div>
-      <Breadcrumb className="bg-gray-50 px-5 py-3">
+    <div className="mb-4">
+      <Breadcrumb className="py-3">
         {listPath.map((folder, idx) => (
           <Breadcrumb.Item key={idx}>
             <Label className="text-xl">{folder.folderName}</Label>
