@@ -33,11 +33,12 @@ app.add_middleware(
 
 # Database
 engine = create_engine(
-    Config.DATABASE_URL, connect_args={"check_same_thread": False}
+    Config.DATABASE_URL
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+from .db import *
 from app import routes
