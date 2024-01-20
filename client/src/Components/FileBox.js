@@ -1,77 +1,97 @@
 import { Card, Dropdown } from "flowbite-react";
-import React, { useState } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import { FaPencilAlt, FaDownload, FaRegTrashAlt } from "react-icons/fa";
+import { FaFilePdf } from "react-icons/fa6";
+import RenameModal from "./RenameModal";
+import axios from "axios";
 
 // props needed:
-//  file name, file type, user id, file id,
+//  file name, file type, token, file id,
 function FileBox(props) {
   props = {
     fileName: "memes.jpg",
     fileType: "jpg",
-    userId: "abcUser",
+    token: "abcUser",
     fileId: "f001",
   };
 
+//   const downloadFile = () => {
+//     console.log("download file")
+//   }
+
+  const downloadFile = async (linksList) => {
+    const filestream = new WritableStream();
+    const writer = filestream.getWriter();
+    try {
+      for (const url of linksList) {
+        //   const response = await axios({
+        //     url,
+        //     method: 'GET',
+        //     mode: "no-cors",
+        //     responseType: 'blob',
+        //   });
+        console.log("url", url)
+        // fetch(url, { mode: "no-cors" })
+        //   .then((response) => response.blob())
+        //   .then(blob => {
+        //     console.log(blob)
+        //   })
+        // const reader = new Response(response.data).body.getReader();
+
+        // while (true) {
+        //   const { done, value } = await reader.read();
+
+        //   if (done) {
+        //     break;
+        //   }
+
+        //   // Write the chunk to disk
+        //   await writer.write(value);
+        }
+    //   }
+    //   await writer.close();
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+      // console.log(error.response.data.error)
+    }
+  };
+
+  const deleteFile = (token, fileName) => {
+    // delete file
+  };
+
+  const [fileName, setFileName] = useState(props.fileName);
+  const [renameShow, setRenameShow] = useState(false);
+
   return (
     <div>
-        <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
-      <a className="block max-w-sm p-0 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-        <div className="flex justify-between bg-gray-400 p-3">
-          <p>{props.fileName}</p>
-          <div>
-            <button
-              data-popover-target="popover-click"
-              data-popover-trigger="click"
-              type="button"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Click popover
-            </button>
-
-            <div
-              data-popover
-              id="popover-click"
-              role="tooltip"
-              class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
-            >
-              <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                <h3 class="font-semibold text-gray-900 dark:text-white">
-                  Popover click
-                </h3>
-              </div>
-              <div class="px-3 py-2">
-                <p>
-                  And here's some amazing content. It's very engaging. Right?
-                </p>
-              </div>
-              <div data-popper-arrow></div>
-            </div>
+      <RenameModal
+        renameShow={renameShow}
+        setRenameShow={() => setRenameShow(false)}
+        fileName={fileName}
+      />
+      <a className="max-w-sm overflow-hidden bg-white border border-gray-200 rounded-lg shadow-md">
+        <div className="flex justify-between rounded-lg bg-gray-100 p-3 px-4 py-2 hover:bg-gray-200">
+          <div className="flex items-center">
+            <FaFilePdf className="mr-2 text-red-900" />
+            <p>{props.fileName}</p>
           </div>
 
-          <Dropdown inline label="">
+          <Dropdown className="ml-auto" inline label="">
             <Dropdown.Item>
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Rename
-              </a>
+              <FaPencilAlt className="mr-3" />
+              <button onClick={() => setRenameShow(true)}>Rename</button>
             </Dropdown.Item>
             <Dropdown.Item>
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Download
-              </a>
+              <FaDownload className="mr-3" />
+              <button onClick={() => downloadFile()}>Download</button>
             </Dropdown.Item>
             <Dropdown.Item>
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
+              <FaRegTrashAlt className="mr-3 text-red-600" />
+              <button onClick={() => deleteFile} className="text-red-600">
                 Delete
-              </a>
+              </button>
             </Dropdown.Item>
           </Dropdown>
         </div>
