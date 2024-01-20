@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import MyButton from "../Components/MyButton";
+import FileBox from "../Components/FileBox";
 
 function HomePage() {
     const [file, setFile] = useState(null);
@@ -52,6 +54,7 @@ function HomePage() {
           <button type="submit">Upload</button>
         </form>
         <p>Progress: {progress}%</p>
+        <FileBox />
       </div>
     );
   }
