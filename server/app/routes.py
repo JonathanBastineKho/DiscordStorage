@@ -16,7 +16,7 @@ async def root():
 @app.post("/upload")
 async def upload_file(
     file: UploadFile = Form(...), 
-    chunkId: str = Form(...), 
+    chunkId: int = Form(...), 
     fileName: str = Form(...),
     folderID: int = Form(...),
     fileSize: float = Form(...),
@@ -43,7 +43,8 @@ async def upload_file(
          chunk_id = chunkId,
          channel_id = str(CHANNEL_ID),
          file_name = fileName,
-         folder_id = folderID
+         folder_id = folderID,
+         message_id = sent_message.id
     )
 
     session.add(new_file_chunk)
@@ -120,9 +121,10 @@ def create_folder(parent_folder_id: int, name: str):
 async def get_file(name: str, folder_id: int):
     file_chunks = session.query(FileChunk).filter(and_(FileChunk.file_name == name, FileChunk.folder_id == folder_id)).all()
     urls = []
+    print(file_chunks) 
     for chunk in file_chunks:
          channel = client.get_channel(int(chunk.channel_id))
-         msg = await channel.fetch_message(chunk.chunk_id)
+         msg = await channel.fetch_message(chunk.message_id)
          urls.append(msg.attachments[0].url)
     return {
          "urls" : urls
