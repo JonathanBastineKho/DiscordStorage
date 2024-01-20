@@ -8,6 +8,7 @@ import UploadButton from "../Components/UploadButton";
 import UploadFileModal from "../Components/UploadFileModal";
 import { AuthContext } from "../Components/Authentication/AuthContext";
 import jwtDecode from "jwt-decode";
+import FolderBox from "../Components/FolderBox";
 
 
 function HomePage() {
