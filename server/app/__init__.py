@@ -6,6 +6,7 @@ import asyncio
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 
 # Discord
 CHANNEL_ID = 1197549842851975322
@@ -37,8 +38,12 @@ engine = create_engine(
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+session = SessionLocal()
 
 Base = declarative_base()
+
+if not os.path.exists(Config.TEMP_FOLDER):
+    os.makedirs(Config.TEMP_FOLDER)
 
 from .db import *
 from app import routes
