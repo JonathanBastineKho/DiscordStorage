@@ -12,7 +12,7 @@ import os
 from fastapi.responses import FileResponse
 from starlette.background import BackgroundTask
 
-from .schemas import UserData
+from .schemas import UserData, SystemUser
 
 @app.get("/")
 async def root():
@@ -110,14 +110,14 @@ async def login(data: UserData):
      }
 
 @app.get('/api/verify_token', summary="Verify Token")
-async def verify_token(user: User = Depends(get_current_user)):
+async def verify_token(user: SystemUser = Depends(get_current_user)):
     if user:
         return {"success" : True}
 
 ######## Create and Edit ############
 
 @app.post('/api/create_folder', summary="Create access token")
-def create_folder(parent_folder_id: int, name: str, user: User = Depends(get_current_user)):
+def create_folder(parent_folder_id: int, name: str, user: SystemUser = Depends(get_current_user)):
     new_id = session.query(Folder).order_by(Folder.id.desc()).first().id + 1
     new_folder = Folder(
         id = new_id,
@@ -133,7 +133,7 @@ def create_folder(parent_folder_id: int, name: str, user: User = Depends(get_cur
 ######## get structures ############
 
 @app.get('/api/download')
-async def download_file(name: str, folder_id: int, user: User = Depends(get_current_user)):
+async def download_file(name: str, folder_id: int, user: SystemUser = Depends(get_current_user)):
     file_chunks = session.query(FileChunk).filter(and_(FileChunk.file_name == name, FileChunk.folder_id == folder_id)).all()
     urls = []
     for chunk in file_chunks:
@@ -153,7 +153,7 @@ async def download_file(name: str, folder_id: int, user: User = Depends(get_curr
                         background=BackgroundTask(os.remove, os.path.join(Config.TEMP_FOLDER, name)))
 
 @app.get("/api/sub_folders", summary="Get Subfolders within a folder")
-async def get_subfolder(folder_id: int, user: User = Depends(get_current_user)):
+async def get_subfolder(folder_id: int, user: SystemUser = Depends(get_current_user)):
      folders = session.query(Folder).filter(Folder.parent_folder_id == folder_id).all()
      folders_list = []
      for sub_folder in folders:
@@ -164,7 +164,7 @@ async def get_subfolder(folder_id: int, user: User = Depends(get_current_user)):
         return {"sub_folder" : folders_list}
      
 @app.get("/api/get_files", summary="Get files name within a folder")
-async def get_file(folder_id: int, user: User = Depends(get_current_user)):
+async def get_file(folder_id: int, user: SystemUser = Depends(get_current_user)):
     files = session.query(File).filter_by(File.folder_id == folder_id).all()
     file_name = []
     for file in files:
@@ -172,6 +172,6 @@ async def get_file(folder_id: int, user: User = Depends(get_current_user)):
     return {"files" : file_name}
 
 @app.get("/api/root_folder", summary="Get Folder ID of the root folder")
-async def get_root_id(user: User = Depends(get_current_user)):
-    root_folder_id = session.query(Folder).filter_by(and_(Folder.parent_folder_id == None , Folder.user_id == user.username)).first().id
-    return {"id" : root_folder_id}
+async def get_root_id(user: SystemUser = Depends(get_current_user)):
+    root_folder = session.query(Folder).filter(and_(Folder.parent_folder_id == None , Folder.user_id == user.username)).first()
+    return {"id" : root_folder.id, "name" : root_folder.name}

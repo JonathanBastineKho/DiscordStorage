@@ -7,12 +7,13 @@ function PathBreadCrumb(props) {
     { folderId: 2, folderName: "bbbbbb" },
     { folderId: 3, folderName: "cccccc" },
   ];
+  console.log(props.listPath);
   return (
     <div className="mb-4">
       <Breadcrumb className="py-3">
-        {listPath.map((folder, idx) => (
+        {props.listPath.map((folder, idx) => (
           <Breadcrumb.Item key={idx}>
-            <Label className="text-xl">{folder.folderName}</Label>
+            <Label className="text-xl">{folder.name}</Label>
           </Breadcrumb.Item>
         ))}
       </Breadcrumb>

@@ -15,7 +15,6 @@ async def get_current_user(Authorization: str = Header(None)):
         payload = jwt.decode(
             Authorization, Config.JWT_SECRET_KEY, algorithms=[Config.ALGORITHM]
         )
-
         token_data = TokenPayload(**payload)
 
         if datetime.fromtimestamp(token_data.exp) < datetime.now():
@@ -32,12 +31,11 @@ async def get_current_user(Authorization: str = Header(None)):
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    user = session.query(User).filter(User.username == token_data.sub)
+    user = session.query(User).filter(User.username == token_data.sub).first()
     
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Could not find user",
         )
-    
     return SystemUser(username=token_data.sub)
