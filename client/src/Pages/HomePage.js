@@ -19,6 +19,8 @@ function HomePage() {
   const {token, logout} = useContext(AuthContext);
   const [listPath, setListPath] = useState([]);
 
+  const [folderFileList, setFolderFileList] = useState([])
+
   useEffect(() => {
     axios.get("/api/root_folder", {
       headers : {
