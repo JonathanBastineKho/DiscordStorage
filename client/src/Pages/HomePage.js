@@ -94,7 +94,7 @@ function HomePage() {
 
   return (
     <div>
-    <NewFolderModal open={openNewFolder} setOpenModal={setOpenNewFolder}/>
+    <NewFolderModal refreshFolder={refreshFolder} open={openNewFolder} setOpenModal={setOpenNewFolder} parent_folder_id={listPath.length != 0 ? listPath[listPath.length - 1].id : -1}/>
       <MyNavbar />
       <div className="mt-12 mx-auto px-6 sm:px-8 md:px-10 lg:px-12 xl:max-w-[100rem]">
         <div className="flex flex-wrap justify-between mb-4 items-center">
