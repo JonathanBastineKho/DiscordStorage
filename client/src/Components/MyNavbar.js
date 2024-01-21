@@ -10,16 +10,6 @@ function MyNavbar(props) {
   const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const user = jwtDecode(token);
-  props = {
-    token: "abc",
-    user: { name: "user1", email: "user1@user.com" }
-  }
-
-  const [filter, setFilter] = useState("");
-
-  useEffect(() => {
-    console.log(filter)
-  }, [filter])
 
   return (
     <div>
@@ -41,10 +31,7 @@ function MyNavbar(props) {
             placeholder="Search by file name"
             required={true}
             onChange={(ev) =>
-              setFilter((prev) => ({
-                ...prev,
-                name: ev.target.value,
-              }))
+              props.setFilter(ev.target.value)
             }
           />
         </div>

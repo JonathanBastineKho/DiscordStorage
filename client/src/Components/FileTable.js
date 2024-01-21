@@ -10,7 +10,9 @@ function FileTable(props) {
         <span>
           <Label className="text-md">Folders</Label>
           <div className="grid grid-cols-5 gap-6 mt-2">
-            {props.subFolder.map((subFolder, idx) => (
+            {props.subFolder
+            .filter(subFolder => subFolder.name.toLowerCase().includes(props.filter.toLowerCase()))
+            .map((subFolder, idx) => (
               <FolderBox
                 key={idx}
                 listPath={props.listPath}
@@ -25,7 +27,9 @@ function FileTable(props) {
         <span>
         <Label className="text-md">Files</Label>
         <div className="grid grid-cols-5 gap-6 mt-2">
-          {props.fileNames.map((fileName, idx) => (
+          {props.fileNames
+          .filter(filename => filename.toLowerCase().includes(props.filter.toLowerCase()))
+          .map((fileName, idx) => (
             <FileBox key={idx} folderId={props.currentFolderId} fileName={fileName} />
           ))}
         </div>

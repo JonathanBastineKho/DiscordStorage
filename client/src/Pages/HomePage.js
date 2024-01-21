@@ -43,7 +43,7 @@ function HomePage() {
     .catch((error) => {console.log(error)});
   }
 
-  useEffect(async () => {
+  useEffect(() => {
     axios.get("/api/root_folder", {
       headers: {
         "Authorization": `${token}`
@@ -63,14 +63,14 @@ function HomePage() {
   return (
     <div>
     <NewFolderModal refreshFolder={refreshFolder} open={openNewFolder} setOpenModal={setOpenNewFolder} parent_folder_id={listPath.length != 0 ? listPath[listPath.length - 1].id : -1}/>
-      <MyNavbar />
+      <MyNavbar filter={filter} setFilter={setFilter}/>
       <div className="mt-12 mx-auto px-6 sm:px-8 md:px-10 lg:px-12 xl:max-w-[100rem]">
         <div className="flex flex-wrap justify-between mb-4 items-center">
           <PathBreadCrumb listPath={listPath} />
           <button onClick={() => {setOpenNewFolder(true)}} type="button" class="text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-200 px-4 h-10">+ Folder</button>
         </div>
         
-        <FileTable refreshFolder={refreshFolder} refreshFiles={refreshFiles} listPath={listPath} setListPath={setListPath} fileNames={fileList} subFolder={subFolder} currentFolderId={listPath.length != 0 ? listPath[listPath.length - 1].id : -1}/>
+        <FileTable filter={filter} refreshFolder={refreshFolder} refreshFiles={refreshFiles} listPath={listPath} setListPath={setListPath} fileNames={fileList} subFolder={subFolder} currentFolderId={listPath.length != 0 ? listPath[listPath.length - 1].id : -1}/>
         <UploadButton uploadShow={uploadShow} setUploadShow={setUploadShow} listPath={listPath} refreshFiles={refreshFiles}/>
 
       </div>
