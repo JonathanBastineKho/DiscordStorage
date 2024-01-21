@@ -41,10 +41,10 @@ function UploadFileModal(props) {
               setProgress((i / totalChunks)*100);
             }
             if (i / totalChunks == 1){
-              props.setUploadShow(false);
               setFile(null);
               setVisible(false);
               setProgress(0);
+              props.refreshFiles(props.folderId)
             }
           });
       }
