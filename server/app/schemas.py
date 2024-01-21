@@ -10,3 +10,8 @@ class TokenPayload(BaseModel):
 
 class SystemUser(BaseModel):
     username : str
+
+class FolderIn(BaseModel):
+    parent_folder_id: int
+    name: str
+    

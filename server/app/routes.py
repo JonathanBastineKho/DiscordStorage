@@ -12,7 +12,7 @@ import os
 from fastapi.responses import FileResponse
 from starlette.background import BackgroundTask
 
-from .schemas import UserData, SystemUser
+from .schemas import UserData, SystemUser, FolderIn
 
 @app.get("/")
 async def root():
@@ -117,12 +117,12 @@ async def verify_token(user: SystemUser = Depends(get_current_user)):
 ######## Create and Edit ############
 
 @app.post('/api/create_folder', summary="Create access token")
-def create_folder(parent_folder_id: int, name: str, user: SystemUser = Depends(get_current_user)):
+def create_folder(folder_in: FolderIn, user: SystemUser = Depends(get_current_user)):
     new_id = session.query(Folder).order_by(Folder.id.desc()).first().id + 1
     new_folder = Folder(
         id = new_id,
-        parent_folder_id = parent_folder_id,
-        name = name,
+        parent_folder_id = folder_in.parent_folder_id,
+        name = folder_in.name,
         user_id = user.username
     )
     session.add(new_folder)
