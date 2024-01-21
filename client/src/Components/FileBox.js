@@ -7,9 +7,10 @@ import { MdOndemandVideo } from "react-icons/md";
 import { FaFileImage } from "react-icons/fa6";
 import { FaFilePowerpoint, FaFileWord, FaFileExcel } from "react-icons/fa";
 import { HiQuestionMarkCircle } from "react-icons/hi";
+import RenameFileModal from "./RenameFileModal";
 import { AuthContext } from "./Authentication/AuthContext";
-import RenameModal from "./RenameModal";
 import axios from "axios";
+import DeleteModal from "./DeleteModal";
 
 // props needed:
 //  file name, file type, token, file id,
@@ -66,9 +67,12 @@ function FileBox(props) {
     // delete file
   };
   const [renameShow, setRenameShow] = useState(false);
+  const [deleteShow, setDeleteShow] = useState(false);
 
   return (
     <div>
+      <RenameFileModal renameShow={renameShow} setRenameShow={setRenameShow} filename={props.fileName} />
+      <DeleteModal deleteShow={deleteShow} setDeleteShow={setDeleteShow} filename={props.fileName} />
       <span className="max-w-sm overflow-hidden bg-white rounded-lg shadow-md">
         <div className="flex justify-between rounded-lg bg-gray-100 p-3 px-4 py-2 hover:bg-gray-200">
           <div className="flex items-center">
@@ -87,7 +91,7 @@ function FileBox(props) {
             </Dropdown.Item>
             <Dropdown.Item>
               <FaRegTrashAlt className="mr-3 text-red-600" />
-              <button onClick={() => deleteFile} className="text-red-600">
+              <button onClick={() => setDeleteShow(true)} className="text-red-600">
                 Delete
               </button>
             </Dropdown.Item>
