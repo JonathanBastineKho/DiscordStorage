@@ -134,7 +134,7 @@ def create_folder(parent_folder_id: int, name: str, user: SystemUser = Depends(g
 
 @app.get('/api/download')
 async def download_file(name: str, folder_id: int, user: SystemUser = Depends(get_current_user)):
-    file_chunks = session.query(FileChunk).filter(and_(FileChunk.file_name == name, FileChunk.folder_id == folder_id)).all()
+    file_chunks = session.query(FileChunk).filter(and_(FileChunk.file_name == name, FileChunk.folder_id == folder_id)).order_by(FileChunk.chunk_id).all()
     urls = []
     for chunk in file_chunks:
         channel = client.get_channel(int(chunk.channel_id))
@@ -150,22 +150,22 @@ async def download_file(name: str, folder_id: int, user: SystemUser = Depends(ge
     # Upload file to client
     return FileResponse(path=os.path.join(Config.TEMP_FOLDER, name), 
                         filename=name,
-                        background=BackgroundTask(os.remove, os.path.join(Config.TEMP_FOLDER, name)))
+                      background=BackgroundTask(os.remove, os.path.join(Config.TEMP_FOLDER, name)))
 
 @app.get("/api/sub_folders", summary="Get Subfolders within a folder")
 async def get_subfolder(folder_id: int, user: SystemUser = Depends(get_current_user)):
-     folders = session.query(Folder).filter(Folder.parent_folder_id == folder_id).all()
-     folders_list = []
-     for sub_folder in folders:
+    folders = session.query(Folder).filter(Folder.parent_folder_id == folder_id).all()
+    folders_list = []
+    for sub_folder in folders:
         folders_list.append(
-             {"id" : sub_folder.id,
-              "name" : sub_folder.name}
+                {"id" : sub_folder.id,
+                "name" : sub_folder.name}
         )
-        return {"sub_folder" : folders_list}
+    return {"sub_folder" : folders_list}
      
 @app.get("/api/get_files", summary="Get files name within a folder")
 async def get_file(folder_id: int, user: SystemUser = Depends(get_current_user)):
-    files = session.query(File).filter_by(File.folder_id == folder_id).all()
+    files = session.query(File).filter(File.folder_id == folder_id).all()
     file_name = []
     for file in files:
         file_name.append(file.name)

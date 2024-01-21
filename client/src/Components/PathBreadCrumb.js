@@ -4,7 +4,7 @@ import { Breadcrumb, Label } from "flowbite-react";
 function PathBreadCrumb(props) {
 
   return (
-    <div className="mb-4">
+    <div className="">
       <Breadcrumb className="py-3">
         {props.listPath.map((folder, idx) => (
           <Breadcrumb.Item key={idx}>
