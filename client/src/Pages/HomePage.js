@@ -60,38 +60,6 @@ function HomePage() {
     setFile(e.target.files[0]);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!file) return;
-    const chunkSize = 25 * 1024 * 1024; // 40 KB
-    const totalChunks = Math.ceil(file.size / chunkSize);
-    const userId = "123"; // get the user id from somewhere
-    const fileName = file.name; // get the original file name
-    for (let i = 0; i < totalChunks; i++) {
-      const chunkId = i + 1; // the current chunk number
-      const start = i * chunkSize; // the start byte of the chunk
-      const end = start + chunkSize; // the end byte of the chunk
-      const chunk = file.slice(start, end); // create the chunk
-      const formData = new FormData(); // create a form data
-      formData.append("file", chunk); // append the chunk
-      formData.append("chunkId", chunkId); // append the chunk id
-      formData.append("userId", userId); // append the user id
-      formData.append("fileName", fileName); // append the file name
-      // send the form data to the FastAPI server
-      const response = axios.post("http://localhost:8000/api/upload", formData, {
-        // update the progress state
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            ((progressEvent.loaded + start) * 100) / file.size
-          );
-          setProgress(percentCompleted);
-        },
-      });
-      // handle the response
-      console.log(response.data);
-    }
-  };
-
   return (
     <div>
     <NewFolderModal refreshFolder={refreshFolder} open={openNewFolder} setOpenModal={setOpenNewFolder} parent_folder_id={listPath.length != 0 ? listPath[listPath.length - 1].id : -1}/>
@@ -102,7 +70,7 @@ function HomePage() {
           <button onClick={() => {setOpenNewFolder(true)}} type="button" class="text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-200 px-4 h-10">+ Folder</button>
         </div>
         
-        <FileTable fileNames={fileList} subFolder={subFolder} currentFolderId={listPath.length != 0 ? listPath[listPath.length - 1].id : -1}/>
+        <FileTable refreshFolder={refreshFolder} refreshFiles={refreshFiles} listPath={listPath} setListPath={setListPath} fileNames={fileList} subFolder={subFolder} currentFolderId={listPath.length != 0 ? listPath[listPath.length - 1].id : -1}/>
         <UploadButton uploadShow={uploadShow} setUploadShow={setUploadShow} listPath={listPath} refreshFiles={refreshFiles}/>
 
       </div>

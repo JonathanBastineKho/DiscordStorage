@@ -13,8 +13,11 @@ function FileTable(props) {
             {props.subFolder.map((subFolder, idx) => (
               <FolderBox
                 key={idx}
-                folderList={props.folderList}
-                currentSubFolder={subFolder.folderName}
+                listPath={props.listPath}
+                setListPath={props.setListPath}
+                refreshFolder={props.refreshFolder}
+                refreshFiles={props.refreshFiles}
+                currentSubFolder={subFolder}
               />
             ))}
           </div>
